@@ -38,7 +38,6 @@ public interface PostService extends IService<Post> {
      * @param postQueryRequest
      * @return
      */
-    Page<Post> searchFromEs(PostQueryRequest postQueryRequest);
 
     /**
      * 获取帖子封装
