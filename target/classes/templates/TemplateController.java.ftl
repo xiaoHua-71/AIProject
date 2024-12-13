@@ -28,8 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * ${dataName}接口
  *
- * @author 小花
- * @from 好好学习
  */
 @RestController
 @RequestMapping("/${dataKey}")

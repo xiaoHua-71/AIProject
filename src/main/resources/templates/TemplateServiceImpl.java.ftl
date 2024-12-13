@@ -34,8 +34,6 @@ import java.util.stream.Collectors;
 /**
  * ${dataName}服务实现
  *
- * @author 小花
- * @from 好好学习
  */
 @Service
 @Slf4j

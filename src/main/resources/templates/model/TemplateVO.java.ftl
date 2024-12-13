@@ -12,8 +12,6 @@ import java.util.List;
 /**
  * ${dataName}视图
  *
- * @author 小花
- * @from 好好学习
  */
 @Data
 public class ${upperDataKey}VO implements Serializable {

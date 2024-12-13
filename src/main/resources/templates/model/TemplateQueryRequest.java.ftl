@@ -10,8 +10,6 @@ import java.util.List;
 /**
  * 查询${dataName}请求
  *
- * @author 小花
- * @from 好好学习
  */
 @EqualsAndHashCode(callSuper = true)
 @Data

@@ -8,8 +8,6 @@ import java.util.List;
 /**
  * 创建${dataName}请求
  *
- * @author 小花
- * @from 好好学习
  */
 @Data
 public class ${upperDataKey}AddRequest implements Serializable {

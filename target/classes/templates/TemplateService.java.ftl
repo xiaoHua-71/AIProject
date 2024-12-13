@@ -12,8 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * ${dataName}服务
  *
- * @author 小花
- * @from 好好学习
  */
 public interface ${upperDataKey}Service extends IService<${upperDataKey}> {
 
