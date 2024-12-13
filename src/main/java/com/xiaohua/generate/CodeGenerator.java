@@ -19,7 +19,6 @@ import java.io.Writer;
  * @from 好好学习
  */
 public class CodeGenerator {
-
     /**
      * 用法：修改生成参数和生成路径，注释掉不需要的生成逻辑，然后运行即可
      *
