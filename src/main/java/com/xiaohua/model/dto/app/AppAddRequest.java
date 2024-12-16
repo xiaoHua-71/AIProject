@@ -38,12 +38,5 @@ public class AppAddRequest implements Serializable {
      */
     private Integer scoringStrategy;
 
-
-    /**
-     * 是否删除 1 代表删除，0 代表未删除
-     */
-    @TableLogic
-    private Integer isDelete;
-
     private static final long serialVersionUID = 1L;
 }

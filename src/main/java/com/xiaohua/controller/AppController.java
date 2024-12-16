@@ -2,10 +2,7 @@ package com.xiaohua.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xiaohua.annotation.AuthCheck;
-import com.xiaohua.common.BaseResponse;
-import com.xiaohua.common.DeleteRequest;
-import com.xiaohua.common.ErrorCode;
-import com.xiaohua.common.ResultUtils;
+import com.xiaohua.common.*;
 import com.xiaohua.constant.UserConstant;
 import com.xiaohua.exception.BusinessException;
 import com.xiaohua.exception.ThrowUtils;
@@ -15,6 +12,7 @@ import com.xiaohua.model.dto.app.AppQueryRequest;
 import com.xiaohua.model.dto.app.AppUpdateRequest;
 import com.xiaohua.model.entity.App;
 import com.xiaohua.model.entity.User;
+import com.xiaohua.model.enums.ReviewStatusEnum;
 import com.xiaohua.model.vo.AppVO;
 import com.xiaohua.service.AppService;
 import com.xiaohua.service.UserService;
@@ -24,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 /**
  * 应用接口
@@ -63,6 +62,9 @@ public class AppController {
         // todo 填充默认值
         User loginUser = userService.getLoginUser(request);
         app.setUserId(loginUser.getId());
+        //新创建app设置待审核状态
+        app.setReviewStatus(ReviewStatusEnum.REVIEWING.getValue());
+
         // 写入数据库，写入成功返回true,否则返回false
         boolean result = appService.save(app);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
@@ -197,6 +199,8 @@ public class AppController {
         long size = appQueryRequest.getPageSize();
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
+        //只能看到过审的用户
+        appQueryRequest.setReviewStatus(ReviewStatusEnum.PASS.getValue());
         // 查询数据库
         Page<App> appPage = appService.page(new Page<>(current, size),
                 appService.getQueryWrapper(appQueryRequest));
@@ -230,6 +234,8 @@ public class AppController {
         if (!oldApp.getUserId().equals(loginUser.getId()) && !userService.isAdmin(loginUser)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
+        //设置默认值,重置审核状态
+        app.setReviewStatus(ReviewStatusEnum.REVIEWING.getValue());
         // 操作数据库
         boolean result = appService.updateById(app);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
@@ -237,4 +243,41 @@ public class AppController {
     }
 
     // endregion
+
+    /**
+     * 审核应用
+     */
+    @PostMapping("review")
+    public BaseResponse<Boolean> doAppReview(@RequestBody ReviewRequest reviewRequest,HttpServletRequest request){
+        ThrowUtils.throwIf(reviewRequest == null,ErrorCode.PARAMS_ERROR);
+        Long id = reviewRequest.getId();
+        Integer reviewStatus = reviewRequest.getReviewStatus();
+        //校验
+        ReviewStatusEnum enumByValue = ReviewStatusEnum.getEnumByValue(reviewStatus);
+        if(id == null || enumByValue == null){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        //判断是否存在
+        App byId = appService.getById(id);
+        ThrowUtils.throwIf(byId == null,ErrorCode.NOT_FOUND_ERROR);
+        //已是该状态
+        if (byId.getReviewStatus().equals(reviewStatus)){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,"请勿重复审核");
+        }
+
+        //更新审核状态
+        User loginUser = userService.getLoginUser(request);
+        App app = new App();
+        app.setId(id);
+        app.setReviewStatus(reviewStatus);
+        app.setReviewerId(loginUser.getId());
+        app.setReviewMessage(reviewRequest.getReviewMessage());
+        app.setReviewTime(new Date());
+        boolean result = appService.updateById(app);
+        ThrowUtils.throwIf(!result ,ErrorCode.PARAMS_ERROR);
+        return ResultUtils.success(true);
+
+
+
+    }
 }

@@ -1,5 +1,6 @@
 package com.xiaohua.controller;
 
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xiaohua.annotation.AuthCheck;
 import com.xiaohua.common.BaseResponse;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 评分结果接口
@@ -54,9 +56,11 @@ public class ScoringResultController {
     @PostMapping("/add")
     public BaseResponse<Long> addScoringResult(@RequestBody ScoringResultAddRequest scoringresultAddRequest, HttpServletRequest request) {
         ThrowUtils.throwIf(scoringresultAddRequest == null, ErrorCode.PARAMS_ERROR);
-        // todo 在此处将实体类和 DTO 进行转换
+        //  在此处将实体类和 DTO 进行转换
         ScoringResult scoringresult = new ScoringResult();
         BeanUtils.copyProperties(scoringresultAddRequest, scoringresult);
+        List<String> requestResultProp = scoringresultAddRequest.getResultProp();
+        scoringresult.setResultProp(JSONUtil.toJsonStr(requestResultProp));
         // 数据校验
         scoringresultService.validScoringResult(scoringresult, true);
         // todo 填充默认值
@@ -109,9 +113,11 @@ public class ScoringResultController {
         if (scoringresultUpdateRequest == null || scoringresultUpdateRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        // todo 在此处将实体类和 DTO 进行转换
+        // 在此处将实体类和 DTO 进行转换
         ScoringResult scoringresult = new ScoringResult();
         BeanUtils.copyProperties(scoringresultUpdateRequest, scoringresult);
+        List<String> requestResultProp = scoringresultUpdateRequest.getResultProp();
+        scoringresult.setResultProp(JSONUtil.toJsonStr(requestResultProp));
         // 数据校验
         scoringresultService.validScoringResult(scoringresult, false);
         // 判断是否存在
@@ -215,9 +221,11 @@ public class ScoringResultController {
         if (scoringresultEditRequest == null || scoringresultEditRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        // todo 在此处将实体类和 DTO 进行转换
+        //  在此处将实体类和 DTO 进行转换
         ScoringResult scoringresult = new ScoringResult();
         BeanUtils.copyProperties(scoringresultEditRequest, scoringresult);
+        List<String> requestResultProp = scoringresultEditRequest.getResultProp();
+        scoringresult.setResultProp(JSONUtil.toJsonStr(requestResultProp));
         // 数据校验
         scoringresultService.validScoringResult(scoringresult, false);
         User loginUser = userService.getLoginUser(request);
