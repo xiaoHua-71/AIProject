@@ -1,5 +1,6 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import { RouteRecordRaw } from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import UserLayout from "@/layouts/UserLayout.vue"
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -7,6 +8,20 @@ export const routes: Array<RouteRecordRaw> = [
     name: "home",
     component: HomeView,
   },
+	{
+		path: "/user",
+		name :"用户",
+		component :UserLayout,
+		children: [
+			{
+				path: "/user/login",
+				name: "用户登录",
+				component :HomeView,
+			},
+
+			
+		],
+	},
   {
     path: "/about",
     name: "about",

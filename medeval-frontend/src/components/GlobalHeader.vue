@@ -9,7 +9,7 @@
 								
 							</div>
 						</a-menu-item>
-						<a-menu-item v-for="item in routes" :key="item.path">{{item.name}}</a-menu-item>
+						<a-menu-item v-for="item in visibleRoutes" :key="item.path">{{item.name}}</a-menu-item>
 					</a-menu>
 			</a-col>
 			
@@ -41,7 +41,12 @@ const doMenuClick = (key:string) =>{
 	});
 };
 //展示在菜单栏的路由数组
-const visibleRoutes = 
+const visibleRoutes = routes.filter((item) => {
+	if(item.meta?.hideInMenu){
+		return false;
+	}
+	return true;
+});
 
 </script>
 
