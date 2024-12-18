@@ -5,8 +5,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineComponent } from "vue";
-import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
+// import { defineComponent } from "vue";
+// import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
 
 const aaa = "欢迎来到简医答题平台";
 </script>
