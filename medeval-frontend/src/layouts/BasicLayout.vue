@@ -27,6 +27,8 @@
 <style>
 	
 	#bascLayout .content{
+		max-width: 1200px;
+		margin: 0 auto;
 		/* 渐变色 */
 		background: linear-gradient(to right,#fefefe , #fff);
 		margin-bottom: 28px;
