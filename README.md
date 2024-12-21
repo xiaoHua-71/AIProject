@@ -1,12 +1,35 @@
 简医AI问答平台，是一款根据用户答题快速判断用户当前状态的一款智能答题平台。
 
-前端+后端主体框架基本完成
+技术框架：SpringBoot+MySQL+Redis+Mybatis-Plus+Vue +Arco+Maven+Git
 
-![image](https://github.com/user-attachments/assets/6fce960d-5d33-4e63-81a6-05c9224db4a3)
 
-![image](https://github.com/user-attachments/assets/9026939a-c299-4730-80a3-043e0b9fefd6)
+用户基础流程
 
-管理界面
+答题 -> 登录 -> 选择答题应用 ->得到测试结果
 
-![image](https://github.com/user-attachments/assets/54f16c39-b3f3-43f5-98dc-9f7c94e173f0)
+答题
+
+![image](https://github.com/user-attachments/assets/285b4989-41c1-4de5-b18e-deff986751b6)
+
+
+登录
+
+![image](https://github.com/user-attachments/assets/80127764-328f-443d-9e90-8ca3808dfd70)
+
+
+选择答题应用
+
+![image](https://github.com/user-attachments/assets/29f2a704-6d7e-491f-9a66-5501b52c055c)
+
+得到测试结果
+
+![image](https://github.com/user-attachments/assets/1e482c64-131f-49f8-8245-f6236cd69ff6)
+
+
+
+管理员基础流程
+
+综合管理
+
+![image](https://github.com/user-attachments/assets/bc8ac899-8a96-4bb2-9def-8d41b72fa36e)
 
