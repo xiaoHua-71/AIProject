@@ -50,16 +50,18 @@ public class CustomScoreScoringStrategy implements ScoringStrategy {
         QuestionVO questionVO = QuestionVO.objToVo(question);
         List<QuestionContentDTO> questionContent = questionVO.getQuestionContent();
         //遍历题目列表
-        for (QuestionContentDTO questionContentDTO : questionContent) {
-            //遍历答案列表
-            for (String answer : choices) {
-                //遍历题目中的选项
-                for (QuestionContentDTO.Option option : questionContentDTO.getOptions()) {
-                    //如果答案和选项的key匹配
-                    if (option.getKey().equals(answer)) {
-                        int score = Optional.of(option.getScore()).orElse(0);
-                        totalScore += score;
-                    }
+        // 遍历题目列表并同时遍历用户选择的答案
+        for (int i = 0; i < questionContent.size(); i++) {
+            QuestionContentDTO questionContentDTO = questionContent.get(i);
+            String answer = choices.get(i);
+
+            // 遍历题目中的选项
+            for (QuestionContentDTO.Option option : questionContentDTO.getOptions()) {
+                // 如果答案和选项的key匹配
+                if (option.getKey().equals(answer)) {
+                    int score = Optional.ofNullable(option.getScore()).orElse(0);
+                    totalScore += score;
+                    break; // 找到匹配项后退出循环，避免重复加分数
                 }
             }
         }
