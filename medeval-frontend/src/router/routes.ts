@@ -11,6 +11,12 @@ import AdminScoringResultPage from "@/views/admin/AdminScoringResultPage.vue";
 import AdminUserAnswerPage from "@/views/admin/AdminUserAnswerPage.vue";
 import AdminAppPage from "@/views/admin/AdminAppPage.vue";
 import AppDetailPage from "@/views/app/AppDetailPage.vue";
+import AddAppPage from "@/views/add/AddAppPage.vue";
+import AddQuestionPage from "@/views/add/AddQuestionPage.vue";
+import AddScoringResultPage from "@/views/add/AddScoringResultPage.vue";
+import DoAnswerPage from "@/views/answer/DoAnswerPage.vue";
+import AnswerResultPage from "@/views/answer/AnswerResultPage.vue";
+import MyAnswerPage from "@/views/answer/MyAnswerPage.vue";
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -19,14 +25,74 @@ export const routes: Array<RouteRecordRaw> = [
     component: HomePage,
   },
 	{
-		path: "/app/detail/:id",
-		name: "应用详情页",
+		path: "/add/app",
+		name: "创建应用",
+		component: AddAppPage,
+  },
+	{
+		path: "/add/app/:id",
+		name: "修改应用",
 		props: true,
-		components: AppDetailPage,
+		component: AddAppPage,
 		meta: {
-		  access: ACCESS_ENUM.ADMIN,
+		  hideInMenu: true,
 		},
 	},
+	{
+		path:"/add/question/:appId",
+		name:"创建题目",
+		props: true,
+		component: AddQuestionPage,
+		meta: {
+		  hideInMenu: true,
+		},
+	},
+{
+    path: "/answer/do/:appId",
+    name: "答题",
+    component: DoAnswerPage,
+    props: true,
+    meta: {
+      hideInMenu: true,
+      access: ACCESS_ENUM.USER,
+    },
+  },
+  {
+    path: "/answer/result/:id",
+    name: "答题结果",
+    component: AnswerResultPage,
+    props: true,
+    meta: {
+      hideInMenu: true,
+      access: ACCESS_ENUM.USER,
+    },
+  },
+  {
+    path: "/answer/my",
+    name: "我的答题",
+    component: MyAnswerPage,
+    meta: {
+      access: ACCESS_ENUM.USER,
+    },
+  },
+	{
+		path:"/add/scoring_result/:appId",
+		name:"创建评分",
+		props: true,
+		component: AddScoringResultPage,
+		meta: {
+		  hideInMenu: true,
+		},
+	},
+  {
+    path: "/app/detail/:id",
+    name: "应用详情页",
+    props: true,
+    component: AppDetailPage,
+    meta: {
+      hideInMenu: true,
+    },
+  },
   {
     path: "/admin/user",
     name: "用户管理",
