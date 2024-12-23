@@ -79,4 +79,4 @@ knife4j:
           - com.xiaohua.controller
 #AI配置
 ai:
-  apiKey: 742d0f18a94c827a96899edff3aa01cc.I0MLBTcz1Mbu5Giy
+  apiKey: "填入你的key"
