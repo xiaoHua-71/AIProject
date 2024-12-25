@@ -12,9 +12,13 @@
         {{ appId }}
       </a-form-item>
       <a-form-item label="题目列表" :content-flex="false" :merge-props="false">
-        <a-button @click="addQuestion(questionContent.length)">
-          底部添加题目
-        </a-button>
+        <a-space size="medium">
+					<a-button @click="addQuestion(questionContent.length)">
+					  底部添加题目
+					</a-button>
+					<!-- Ai生成代码 -->
+					<AiGenerateQuestionDrawer :appId="appId" :onSuccess="onAiGenerateSuccess" />
+				</a-space>
         <!-- 遍历每道题目 -->
         <div v-for="(question, index) in questionContent" :key="index">
           <a-space size="large">
@@ -105,6 +109,7 @@ import {
 import message from "@arco-design/web-vue/es/message";
 import { APP_TYPE_ENUM } from "@/constant/app";
 import { getAppVoByIdUsingGet } from "@/api/appController";
+import AiGenerateQuestionDrawer from "@/views/add/components/AiGenerateQuestionDrawer.vue";
 
 interface Props {
   appId: string;
@@ -201,7 +206,6 @@ const loadData = async () => {
 	      message.error("获取应用详情失败：" + appDetailRes.data.message);
 	    }
 	
-	
   const res = await listQuestionVoByPageUsingPost({
     appId: props.appId as any,
     current: 1,
@@ -258,4 +262,9 @@ const handleSubmit = async () => {
     message.error("操作失败，" + res.data.message);
   }
 };
+//AI生成题目成功后提醒
+const onAiGenerateSuccess = (result: API.QuestionContentDTO[]) =>{
+	message.success(`AI 生成题目成功，生成${result.length}道题目`)
+	questionContent.value = [...questionContent.value,...result];
+}
 </script>

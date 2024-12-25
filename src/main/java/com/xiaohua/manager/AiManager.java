@@ -8,6 +8,8 @@ import com.zhipu.oapi.service.v4.model.ChatCompletionRequest;
 import com.zhipu.oapi.service.v4.model.ChatMessage;
 import com.zhipu.oapi.service.v4.model.ChatMessageRole;
 import com.zhipu.oapi.service.v4.model.ModelApiResponse;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ import java.util.List;
  * @description: 好好学Java
  * @author: XiaoHua
  **/
-
+@Component
 public class AiManager {
     @Resource
     private ClientV4 clientV4;
@@ -66,15 +68,14 @@ public class AiManager {
      * @param temperature
      * @return
      */
-    public String doRequest(String systemMessage,String userMessage, Boolean stream, Float temperature) {
+    public String doRequest(String systemMessage, String userMessage, Boolean stream, Float temperature) {
         // 构造请求
-        List<ChatMessage> chatMessageList = new ArrayList<>();
-        ChatMessage userChatMessage = new ChatMessage(ChatMessageRole.SYSTEM.value(), userMessage);
-        chatMessageList.add(userChatMessage);
-
-        ChatMessage systemChatMessage = new ChatMessage(ChatMessageRole.USER.value(), systemMessage);
-        chatMessageList.add(systemChatMessage);
-        return doRequest(chatMessageList,stream,temperature);
+        List<ChatMessage> messages = new ArrayList<>();
+        ChatMessage systemChatMessage = new ChatMessage(ChatMessageRole.SYSTEM.value(), systemMessage);
+        ChatMessage userChatMessage = new ChatMessage(ChatMessageRole.USER.value(), userMessage);
+        messages.add(systemChatMessage);
+        messages.add(userChatMessage);
+        return doRequest(messages, stream, temperature);
     }
 
 

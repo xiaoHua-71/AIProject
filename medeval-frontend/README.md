@@ -23,7 +23,10 @@ npm run lint
 ```
 npx eslint . --ext .js,.vue,.ts --fix
 ```
-
+### 一键生成Api
+```
+npm run openapi2ts
+```
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).

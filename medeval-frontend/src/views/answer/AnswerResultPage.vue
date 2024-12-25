@@ -6,8 +6,8 @@
           <h2>{{ data.resultName }}</h2>
           <p>结果描述：{{ data.resultDesc }}</p>
           <!-- <p>结果 id：{{ data.resultId }}</p> -->
-          <p>结果得分：{{ data.resultScore }}</p>
-          <p>我的答案：{{ data.choices }}</p>
+          <p v-if="isScoreApp" >结果得分：{{ data.resultScore }}</p>
+          <p >我的答案：{{ data.choices }}</p>
           <!-- <p>应用 id：{{ data.appId }}</p> -->
           <!-- <p>应用类型：{{ APP_TYPE_MAP[data.appType] }}</p> -->
           <!-- <p>评分策略：{{ APP_SCORING_STRATEGY_MAP[data.scoringStrategy] }}</p> -->
@@ -44,13 +44,14 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, watchEffect, withDefaults } from "vue";
+import { computed, defineProps, onMounted, ref, watchEffect, withDefaults } from "vue";
 import API from "@/api";
 import { getUserAnswerVoByIdUsingGet } from "@/api/userAnswerController";
 import message from "@arco-design/web-vue/es/message";
 import { useRouter } from "vue-router";
 import { dayjs } from "@arco-design/web-vue/es/_utils/date";
-import { APP_SCORING_STRATEGY_MAP, APP_TYPE_MAP } from "../../constant/app";
+import { APP_SCORING_STRATEGY_MAP, APP_TYPE_ENUM, APP_TYPE_MAP } from "../../constant/app";
+import { getAppVoByIdUsingGet } from "@/api/appController";
 
 interface Props {
   id: string;
@@ -66,6 +67,7 @@ const router = useRouter();
 
 const data = ref<API.UserAnswerVO>({});
 
+
 /**
  * 加载数据
  */
@@ -78,6 +80,9 @@ const loadData = async () => {
   });
   if (res.data.code === 0) {
     data.value = res.data.data as any;
+    if (data.value.appId) {
+      await loadAppDetails();
+    }
   } else {
     message.error("获取数据失败，" + res.data.message);
   }
@@ -89,6 +94,35 @@ const loadData = async () => {
 watchEffect(() => {
   loadData();
 });
+
+
+// 应用类型
+const appType = ref<number>(APP_TYPE_ENUM.SCORE); // 默认值为得分类
+
+// 判断是否是得分类应用的方法
+const isScoreApp = computed(() => appType.value === APP_TYPE_ENUM.SCORE);
+
+onMounted(async () => {
+  await loadAppDetails();
+});
+
+const loadAppDetails = async () => {
+  if (!data.value.appId) {
+    return;
+  }
+  try {
+    const appDetailRes = await getAppVoByIdUsingGet({ id: data.value.appId as any });
+    if (appDetailRes.data?.code === 0 && appDetailRes.data?.data) {
+      const appDetail = appDetailRes.data.data;
+      appType.value = appDetail.appType || APP_TYPE_ENUM.SCORE; // 设置应用类型
+    } else {
+      message.error("获取应用详情失败：" + appDetailRes.data.message);
+    }
+  } catch (error) {
+    message.error("加载数据时发生错误");
+  }
+}
+
 </script>
 
 <style scoped>
