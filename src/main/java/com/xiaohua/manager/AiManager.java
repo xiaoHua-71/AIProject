@@ -4,11 +4,8 @@ import com.xiaohua.common.ErrorCode;
 import com.xiaohua.exception.BusinessException;
 import com.zhipu.oapi.ClientV4;
 import com.zhipu.oapi.Constants;
-import com.zhipu.oapi.service.v4.model.ChatCompletionRequest;
-import com.zhipu.oapi.service.v4.model.ChatMessage;
-import com.zhipu.oapi.service.v4.model.ChatMessageRole;
-import com.zhipu.oapi.service.v4.model.ModelApiResponse;
-import org.springframework.context.annotation.Configuration;
+import com.zhipu.oapi.service.v4.model.*;
+import io.reactivex.Flowable;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -59,6 +56,45 @@ public class AiManager {
     public String doSyncRequest(String systemMessage,String userMessage, Float temperature) {
         return doRequest(systemMessage,userMessage,Boolean.FALSE,temperature);
     }
+
+    /**
+     * 通用流式请求（简化消息传递）
+     *
+     * @param systemMessage
+     * @param userMessage
+     * @param temperature
+     * @return
+     */
+    public Flowable<ModelData> doStreamRequest(String systemMessage, String userMessage, Float temperature) {
+        // 构造请求
+        List<ChatMessage> messages = new ArrayList<>();
+        ChatMessage systemChatMessage = new ChatMessage(ChatMessageRole.SYSTEM.value(), systemMessage);
+        ChatMessage userChatMessage = new ChatMessage(ChatMessageRole.USER.value(), userMessage);
+        messages.add(systemChatMessage);
+        messages.add(userChatMessage);
+        return doStreamRequest(messages, temperature);
+    }
+
+    /**
+     * 通用流式请求
+     *
+     * @param messages
+     * @param temperature
+     * @return
+     */
+    public Flowable<ModelData> doStreamRequest(List<ChatMessage> messages, Float temperature) {
+        // 构造请求
+        ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder()
+                .model(Constants.ModelChatGLM4)
+                .stream(Boolean.TRUE)
+                .invokeMethod(Constants.invokeMethod)
+                .temperature(temperature)
+                .messages(messages)
+                .build();
+        ModelApiResponse invokeModelApiResp = clientV4.invokeModelApi(chatCompletionRequest);
+        return invokeModelApiResp.getFlowable();
+    }
+
 
     /**
      * 通用请求，简化消息传递*

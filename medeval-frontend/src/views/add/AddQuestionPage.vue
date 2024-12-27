@@ -17,7 +17,13 @@
 					  底部添加题目
 					</a-button>
 					<!-- Ai生成代码 -->
-					<AiGenerateQuestionDrawer :appId="appId" :onSuccess="onAiGenerateSuccess" />
+					<AiGenerateQuestionDrawer 
+					:appId="appId" 
+					:onSuccess="onAiGenerateSuccess"
+					:onSSESuccess = "onAiGenerateSuccessSSE"
+					:onSSEStart = "onSSEStart"
+					:onSSEClose = "onSSEClose"
+					 />
 				</a-space>
         <!-- 遍历每道题目 -->
         <div v-for="(question, index) in questionContent" :key="index">
@@ -267,4 +273,20 @@ const onAiGenerateSuccess = (result: API.QuestionContentDTO[]) =>{
 	message.success(`AI 生成题目成功，生成${result.length}道题目`)
 	questionContent.value = [...questionContent.value,...result];
 }
+
+//AISSE生成题目成功后提醒
+const onAiGenerateSuccessSSE = (result: API.QuestionContentDTO) =>{
+	questionContent.value = [...questionContent.value,result];
+};
+
+/**
+ * SSE生成开始
+ */
+
+const	onSSEStart = (event: any) => {
+	message.success("开始生成");
+};
+const	onSSEClose = (event: any) => {
+	message.success("生成完毕");
+};
 </script>

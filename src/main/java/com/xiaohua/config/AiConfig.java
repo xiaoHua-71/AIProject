@@ -6,7 +6,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.concurrent.TimeUnit;
 
 /**
  * @description: 好好学Java
@@ -24,7 +23,6 @@ public class AiConfig {
     @Bean
     public ClientV4 getClientV4(){
         return new ClientV4.Builder(apiKey)
-                .networkConfig(30,60,60,60, TimeUnit.SECONDS)
                 .build();
 
     }
