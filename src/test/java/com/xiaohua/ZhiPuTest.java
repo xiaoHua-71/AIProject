@@ -26,7 +26,6 @@ public class ZhiPuTest {
     @Test
     public void test(){
         //初始化的客户端
-//        ClientV4 client = new ClientV4.Builder("742d0f18a94c827a96899edff3aa01cc.I0MLBTcz1Mbu5Giy").build();
         List<ChatMessage> messages = new ArrayList<>();
         ChatMessage chatMessage = new ChatMessage(ChatMessageRole.USER.value(), "作为一名营销专家，请为智谱开放平台创作一个吸引人的slogan");
         messages.add(chatMessage);
