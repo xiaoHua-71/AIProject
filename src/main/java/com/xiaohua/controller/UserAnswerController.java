@@ -1,5 +1,6 @@
 package com.xiaohua.controller;
 
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xiaohua.annotation.AuthCheck;
@@ -25,6 +26,7 @@ import com.xiaohua.service.UserAnswerService;
 import com.xiaohua.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -84,8 +86,15 @@ public class UserAnswerController {
         User loginUser = userService.getLoginUser(request);
         userAnswer.setUserId(loginUser.getId());
         // 写入数据库
-        boolean result = userAnswerService.save(userAnswer);
-        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        //返回新写入的uuid
+        try {
+            boolean result = userAnswerService.save(userAnswer);
+            ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+
+        }catch (DuplicateKeyException e){
+            //忽略错误
+        }
+
         // 返回新写入的数据 id
         long newUserAnswerId = userAnswer.getId();
         //调用评分模块
@@ -93,6 +102,8 @@ public class UserAnswerController {
             //使用相应的评分模板进行评分
             UserAnswer userAnswerWithResult = scoringStrategyExecutor.doScore(choices, app);
             userAnswerWithResult.setId(newUserAnswerId);
+            //防止分片出错
+            userAnswerWithResult.setAppId(null);
             //没评分一次则进行一次修改（目前是同步状态）
             userAnswerService.updateById(userAnswerWithResult);
         } catch (Exception e) {
@@ -272,6 +283,12 @@ public class UserAnswerController {
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
     }
+
+    @GetMapping("/generate/id")
+    public BaseResponse<Long> generateUserAnswerId() {
+        return ResultUtils.success(IdUtil.getSnowflakeNextId());
+    }
+
 
     // endregion
 }
