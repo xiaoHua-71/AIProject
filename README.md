@@ -33,3 +33,8 @@
 
 ![image](https://github.com/user-attachments/assets/bc8ac899-8a96-4bb2-9def-8d41b72fa36e)
 
+答题统计
+
+![image](https://github.com/user-attachments/assets/f2ab653f-48f7-4cf1-873b-0fe71ea2738a)
+
+
