@@ -2,7 +2,7 @@ import axios from "axios";
 import { Message } from "@arco-design/web-vue";
 
 const myAxios = axios.create({
-  baseURL: "http://localhost:8101",
+  baseURL: "https://medeval-backend-133723-9-1332224403.sh.run.tcloudbase.com",
   timeout: 60000,
   withCredentials: true,
 });
